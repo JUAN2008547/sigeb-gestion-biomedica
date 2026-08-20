@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGEB - Gestión Biomédica</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome para Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js para Gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-canvas: #f2f5fa;
+            --primary-dark: #12193b;
+            --accent-orange: #ff7300;
+            --accent-green: #10b981;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Flotante */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-dark);
+            border-radius: 20px;
+            position: fixed;
+            top: 20px;
+            bottom: 20px;
+            left: 20px;
+            padding: 24px;
+            z-index: 1000;
+        }
+
+        .nav-link-custom {
+            color: #94a3b8;
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link-custom:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-link-custom.active {
+            color: #ffffff;
+            background-color: var(--accent-orange);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255, 115, 0, 0.3);
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            margin-left: 290px;
+            padding: 20px 30px 40px 10px;
+        }
+
+        .custom-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            border: none;
+            box-shadow: var(--card-shadow);
+            padding: 24px;
+        }
+
+        /* Tabla Estilizada */
+        .table-custom {
+            vertical-align: middle;
+        }
+
+        .table-custom th {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .table-custom td {
+            padding: 16px 8px;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .badge-status-operativo {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.78rem;
+        }
+
+        .equipment-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            object-fit: cover;
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR FLOTANTE -->
+    <div class="sidebar shadow">
+        <div class="d-flex align-items-center gap-3 px-2 mb-4">
+            <div class="bg-white p-2 rounded-3">
+                <img src="{% static 'icon-equipos-medicos.png' %}" width="28" alt="Logo">
+            </div>
+            <h5 class="mb-0 fw-bold fs-5 text-white">SIGEB</h5>
+        </div>
+        <hr class="border-secondary opacity-25">
+        <div class="d-flex flex-column gap-2 mt-3">
+            <a href="{% url 'lista_equipos' %}" class="nav-link-custom active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a href="{% url 'inventario' %}" class="nav-link-custom"><i class="fa-solid fa-stethoscope"></i> Inventario</a>
+            <a href="{% url 'mantenimientos' %}" class="nav-link-custom"><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento</a>
+            <a href="#" class="nav-link-custom"><i class="fa-solid fa-triangle-exclamation"></i> Incidencias</a>
+            <a href="/admin/" class="nav-link-custom mt-4 text-warning"><i class="fa-solid fa-user-gear"></i> Administrador</a>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Encabezado -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-0 text-dark">Resumen del Sistema</h3>
+                <p class="text-muted small mb-0">Sistema Integral de Gestión de Equipos Biomédicos • Monitoreo en tiempo real</p>
+            </div>
+            <a href="/admin/equipos/equipomedico/add/" class="btn btn-warning text-white rounded-pill px-4 fw-semibold shadow-sm" style="background-color: var(--accent-orange); border:none;">
+                <i class="fa-solid fa-plus me-1"></i> Nuevo Equipo
+            </a>
+        </div>
+
+        <!-- Fila Superior: Gráfica + Tarjetas Estadísticas -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="custom-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-chart-line text-warning me-2"></i>Estado de Disponibilidad</h6>
+                    </div>
+                    <div style="height: 180px;">
+                        <canvas id="disponibilidadChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="custom-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <span class="text-muted small fw-semibold">Total Dispositivos</span>
+                        <h1 class="fw-bold display-5 text-dark mt-1 mb-2">{{ equipos|length }}</h1>
+                        <span class="badge badge-status-operativo"><i class="fa-solid fa-circle-check me-1"></i>100% Operativos</span>
+                    </div>
+                    <hr class="my-3 opacity-25">
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span>Mantenimientos Mes</span>
+                        <span class="fw-bold text-warning">Al día</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Equipos Médicos -->
+        <div class="custom-card">
+            <h6 class="fw-bold mb-3 text-dark">Equipos Médicos Registrados</h6>
+            <div class="table-responsive">
+                <table class="table table-custom align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Equipo</th>
+                            <th>Marca / Modelo</th>
+                            <th>N° Serie</th>
+                            <th>Ubicación</th>
+                            <th>Próximo Mta.</th>
+                            <th class="text-center">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for equipo in equipos %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    {% if equipo.imagen %}
+                                        <img src="{{ equipo.imagen.url }}" class="equipment-img shadow-sm" alt="{{ equipo.nombre }}">
+                                    {% else %}
+                                        <div class="equipment-img d-flex align-items-center justify-content-center text-secondary">
+                                            <i class="fa-solid fa-microscope"></i>
+                                        </div>
+                                    {% endif %}
+                                    <span class="fw-bold text-dark">{{ equipo.nombre }}</span>
+                                </div>
+                            </td>
+                            <td class="text-secondary small">{{ equipo.marca }} <span class="text-muted">({{ equipo.modelo }})</span></td>
+                            <td><span class="badge bg-light text-dark border font-monospace">{{ equipo.numero_serie }}</span></td>
+                            <td class="text-secondary small"><i class="fa-solid fa-location-dot text-danger me-1"></i>{{ equipo.ubicacion }}</td>
+                            <td class="text-secondary small"><span class="badge bg-warning-subtle text-warning-emphasis"><i class="fa-regular fa-calendar me-1"></i>{{ equipo.fecha_proximo_mantenimiento|date:"M d, Y" }}</span></td>
+                            <td class="text-center">
+                                <span class="badge badge-status-operativo">Operativo</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">No hay equipos registrados en el sistema.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración de la Gráfica Suave de Disponibilidad
+        const ctx = document.getElementById('disponibilidadChart').getContext('2d');
+        
+        const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+        gradient.addColorStop(0, 'rgba(255, 115, 0, 0.25)');
+        gradient.addColorStop(1, 'rgba(255, 115, 0, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Operatividad %',
+                    data: [92, 95, 93, 98, 96, 100],
+                    borderColor: '#ff7300',
+                    borderWidth: 3,
+                    fill: true,
+                    backgroundColor: gradient,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#ff7300'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { display: false, min: 80, max: 100 }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
