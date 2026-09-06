@@ -202,10 +202,9 @@
                             <td class="text-center">
                                 <span class="badge badge-status-completado">{{ m.get_estado_display }}</span>
                             </td>
-                            <td class="text-secondary small" style="max-width: 250px;">
-                                <div class="text-truncate" title="{{ m.observaciones }}">
-                                    {{ m.observaciones }}
-                                </div>
+                            <!-- Celda Corregida: Texto oscuro, sin cortar y legible -->
+                            <td class="text-dark small align-top" style="min-width: 250px; white-space: normal; word-break: break-word;">
+                                {{ m.observaciones }}
                             </td>
                         </tr>
                         {% empty %}

@@ -176,8 +176,9 @@
                             </td>
                             <td><span class="badge bg-light text-dark border">{{ inc.get_estado_display }}</span></td>
                             <td class="text-secondary small">{{ inc.fecha_reporte|date:"d/m/Y H:i" }}</td>
-                            <td class="text-secondary small" style="max-width: 250px;">
-                                <div class="text-truncate" title="{{ inc.descripcion }}">{{ inc.descripcion }}</div>
+                            <!-- Celda Corregida: Texto visible completo y oscuro -->
+                            <td class="text-dark small align-top" style="min-width: 250px; white-space: normal; word-break: break-word;">
+                                {{ inc.descripcion }}
                             </td>
                         </tr>
                         {% empty %}
