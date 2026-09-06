@@ -130,7 +130,7 @@
             <a href="{% url 'lista_equipos' %}" class="nav-link-custom"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
             <a href="{% url 'inventario' %}" class="nav-link-custom"><i class="fa-solid fa-stethoscope"></i> Inventario</a>
             <a href="{% url 'mantenimientos' %}" class="nav-link-custom active"><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento</a>
-            <a href="#" class="nav-link-custom"><i class="fa-solid fa-triangle-exclamation"></i> Incidencias</a>
+            <a href="{% url 'incidencias' %}" class="nav-link-custom"><i class="fa-solid fa-triangle-exclamation"></i> Incidencias</a>
             <a href="/admin/" class="nav-link-custom mt-4 text-warning"><i class="fa-solid fa-user-gear"></i> Administrador</a>
         </div>
     </div>
@@ -195,12 +195,12 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="badge badge-status-tipo">{{ m.tipo }}</span></td>
-                            <td class="text-secondary small">{{ m.fecha|date:"d/m/Y" }}</td>
-                            <td class="text-secondary small">{{ m.tecnico }}</td>
+                            <td><span class="badge badge-status-tipo">{{ m.get_tipo_display }}</span></td>
+                            <td class="text-secondary small">{{ m.fecha_mantenimiento|date:"d/m/Y" }}</td>
+                            <td class="text-secondary small">{{ m.tecnico_responsable }}</td>
                             <td class="fw-bold text-dark">${{ m.costo|intcomma }}</td>
                             <td class="text-center">
-                                <span class="badge badge-status-completado">{{ m.estado }}</span>
+                                <span class="badge badge-status-completado">{{ m.get_estado_display }}</span>
                             </td>
                             <td class="text-secondary small" style="max-width: 250px;">
                                 <div class="text-truncate" title="{{ m.observaciones }}">

@@ -31,9 +31,7 @@ class Mantenimiento(models.Model):
         ('cancelado', 'Cancelado'),
     ]
 
-    # Relacionamos el mantenimiento con un equipo en particular
     equipo = models.ForeignKey(EquipoMedico, on_delete=models.CASCADE, related_name='mantenimientos')
-    
     tipo = models.CharField(max_length=20, choices=TIPOS_MANTENIMIENTO, default='preventivo')
     fecha_mantenimiento = models.DateField(verbose_name="Fecha del Mantenimiento")
     tecnico_responsable = models.CharField(max_length=150, verbose_name="Técnico Responsable")
@@ -43,3 +41,25 @@ class Mantenimiento(models.Model):
 
     def __str__(self):
         return f"{self.get_tipo_display()} - {self.equipo.nombre} ({self.fecha_mantenimiento})"
+
+class Incidencia(models.Model):
+    PRIORIDAD_CHOICES = [
+        ('baja', 'Baja'),
+        ('media', 'Media'),
+        ('alta', 'Alta / Urgente'),
+    ]
+    ESTADO_CHOICES = [
+        ('abierta', 'Abierta'),
+        ('en_proceso', 'En Proceso'),
+        ('resuelta', 'Resuelta'),
+    ]
+
+    equipo = models.ForeignKey(EquipoMedico, on_delete=models.CASCADE, related_name='incidencias')
+    titulo = models.CharField(max_length=150, verbose_name="Título de la Incidencia")
+    descripcion = models.TextField(verbose_name="Descripción de la Falla")
+    prioridad = models.CharField(max_length=20, choices=PRIORIDAD_CHOICES, default='media')
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='abierta')
+    fecha_reporte = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.titulo} - {self.equipo.nombre}"

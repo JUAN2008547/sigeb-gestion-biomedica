@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',  # <--- Habilitado para dar formato a números y monedas
 
-    # Mi app
+    # Tus apps
     'equipos',
+    'incidencias',  # <--- Módulo de Incidencias agregado
 ]
 
 MIDDLEWARE = [
