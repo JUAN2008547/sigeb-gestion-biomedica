@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Archivos estáticos recopilados y archivos multimedia subidos por usuarios
+staticfiles/
+media/
+.vscode/

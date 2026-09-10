@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import EquipoMedico, Mantenimiento, Incidencia
+from .forms import EquipoMedicoForm, MantenimientoForm, IncidenciaForm
 from django.db.models import Q
 
 def lista_equipos(request):
@@ -47,4 +48,48 @@ def incidencias(request):
     return render(request, 'equipos/incidencias.html', {
         'incidencias': lista_incidencias, 
         'busqueda': busqueda
+    })
+
+# --- VISTAS PARA CREAR REGISTROS DESDE LA INTERFAZ PROPIA ---
+
+def crear_equipo(request):
+    if request.method == 'POST':
+        form = EquipoMedicoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('inventario')
+    else:
+        form = EquipoMedicoForm()
+    return render(request, 'equipos/formulario_generic.html', {
+        'form': form, 
+        'titulo_pagina': 'Registrar Nuevo Equipo Médico',
+        'subtitulo': 'Llena los campos para ingresar un dispositivo al inventario'
+    })
+
+def crear_mantenimiento(request):
+    if request.method == 'POST':
+        form = MantenimientoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('mantenimientos')
+    else:
+        form = MantenimientoForm()
+    return render(request, 'equipos/formulario_generic.html', {
+        'form': form, 
+        'titulo_pagina': 'Registrar Mantenimiento',
+        'subtitulo': 'Ingresa los detalles del mantenimiento preventivo o correctivo'
+    })
+
+def crear_incidencia(request):
+    if request.method == 'POST':
+        form = IncidenciaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('incidencias')
+    else:
+        form = IncidenciaForm()
+    return render(request, 'equipos/formulario_generic.html', {
+        'form': form, 
+        'titulo_pagina': 'Reportar Nueva Incidencia',
+        'subtitulo': 'Registra una falla detectada en un equipo biomédico'
     })

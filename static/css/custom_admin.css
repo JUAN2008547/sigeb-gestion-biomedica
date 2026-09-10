@@ -1,0 +1,62 @@
+/* =========================================================
+   1. FONDO OSCURO UNIFICADO (SIN MARCOS BLANCOS)
+   ========================================================= */
+body.dark-mode,
+body.dark-mode .wrapper,
+body.dark-mode .content-wrapper,
+body.dark-mode .main-header,
+body.dark-mode .main-footer,
+body.dark-mode .content-header,
+body.dark-mode .content,
+body.dark-mode section,
+body.dark-mode .container-fluid,
+body.dark-mode .row,
+body.dark-mode [class*="col-"] {
+    background-color: #0b0f19 !important;
+    background: #0b0f19 !important;
+    border: none !important;
+}
+
+/* =========================================================
+   2. ELIMINAR BORDES Y LINEAS CLARAS DE ADMINLTE
+   ========================================================= */
+body.dark-mode *, 
+body.dark-mode *::before, 
+body.dark-mode *::after {
+    border-color: #1e293b !important;
+    box-shadow: none !important;
+}
+
+/* =========================================================
+   3. RESTAURAR VISIBILIDAD DE TEXTOS Y TÍTULOS (BLANCO)
+   ========================================================= */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode .content-header h1,
+body.dark-mode .breadcrumb-item,
+body.dark-mode .breadcrumb-item a,
+body.dark-mode .breadcrumb-item.active,
+body.dark-mode .card-title,
+body.dark-mode .timeline-header,
+body.dark-mode .timeline-body,
+body.dark-mode label,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode a {
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   4. TARJETAS Y CONTENEDORES INTERNOS
+   ========================================================= */
+body.dark-mode .card,
+body.dark-mode .card-header,
+body.dark-mode .card-body,
+body.dark-mode .card-footer {
+    background-color: #161e2e !important;
+    border: 1px solid #243144 !important;
+}

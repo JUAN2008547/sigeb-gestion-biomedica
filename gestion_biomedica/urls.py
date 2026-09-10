@@ -7,4 +7,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('equipos.urls')),
     path('incidencias/', include('incidencias.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+admin.site.site_header = "SIGEB - Panel Administrativo"
+admin.site.site_title = "SIGEB Admin"
+admin.site.index_title = "Gestión del Sistema Biomédico"
